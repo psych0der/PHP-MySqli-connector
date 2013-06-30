@@ -55,11 +55,13 @@ $myconn->changeDatabase('name-of-database');
 ?>
 ```
 
-##### select($table,$cols = "*",$where=null , $order = null)
+##### select($table,$count = false,$cols = "*",$where=null , $order = null,$limit = null)
 This method is used to prepare select statement and provides results in form of array.
 >$table referes to name of table.
+>$count is boolean value to denote if only count needs to be executed
 >$rows is array of names of columns to select
 > $where and $order are strings containing where and orderby conditions
+>$limit is limit clause needed for pagination.
 
 ```php
 <?php

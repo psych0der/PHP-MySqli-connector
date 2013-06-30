@@ -97,23 +97,45 @@ public function tableExists($table)
 		return -1; // unable to connect to database
 }
 
-public function select($table,$rows = "*",$where=null , $order = null)
+public function select($table,$count = false,$rows = "*",$where=null , $order = null ,$limit = null )
 {
 
-	$q = 'SELECT '.$rows.'FROM '.$table;
+	if (is_array($rows))
+		$rows = implode(',',$rows);
+
+	if($count!=false)
+		$q = 'SELECT COUNT(*) FROM '.$table;
+	else
+		$q = 'SELECT '.$rows.' FROM '.$table;
+	
 	if($where != NULL)
 		$q.=' WHERE '.$where;
 
-	if($order != NULL)
+	if($order != NULL and $count==false)
 		$q.= ' ORDER BY '.$order;
+
+	if($limit != NULL and $count==false)
+		$q.= $limit;
+
+	
 
 	if($this->tableExists($table))
 	{
-
+		//echo $q;
 		$result = $this->conn->query($q);
 		
 		if(!$result)
 			return false;
+
+		if($count==true)
+		{
+			$row = $result->fetch_array(MYSQLI_NUM);
+			$this->result = $row[0];
+			echo $row[0];
+			return true;
+
+		}
+
 
 		for($i = 0 ; $i< $result->num_rows; $i++)
 		{
@@ -187,6 +209,7 @@ public function insert($table ,$values ,$rows = null)
 public function delete($table, $where= null)
 {
 
+	
 	if($where == null)
 		$delete = 'DROP TABLE '.$table;
 	
@@ -255,7 +278,7 @@ public function update($table,$cols, $where)
 	
 
 		$update .=' WHERE '.$where;
-		echo $update;
+		//echo $update;
 		$result = $this->conn->query($update);
 
 		if($result)
@@ -278,7 +301,7 @@ public function getResult()
 
 public function error()
 {
-	return 'SQL Error : '.$this->conn->error;
+	return 'SQL Error : '.$this->conn->error.' end error ';
 }
 
 }
