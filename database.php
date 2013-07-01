@@ -100,6 +100,12 @@ public function tableExists($table)
 public function select($table,$count = false,$rows = "*",$where=null , $order = null ,$limit = null )
 {
 
+
+/*
+flushing result
+*/
+	$this->result = array();
+
 	if (is_array($rows))
 		$rows = implode(',',$rows);
 
